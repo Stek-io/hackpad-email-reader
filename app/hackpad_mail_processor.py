@@ -7,8 +7,6 @@ import urllib.request
 
 from oauth2client import tools
 
-from gmail_reader import GmailReader
-
 __author__ = "Dimi Balaouras"
 __copyright__ = "Copyright 2017, Stek.io"
 __version__ = "0.0.1"

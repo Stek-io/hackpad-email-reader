@@ -4,12 +4,8 @@ import json
 import logging
 import os
 
-import httplib2
 import redis
-from apiclient import discovery
-from oauth2client import client
 from oauth2client import tools
-from oauth2client.file import Storage
 
 # Suppress cache warnings from gogogle api lib
 logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
