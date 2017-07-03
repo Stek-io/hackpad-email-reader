@@ -121,10 +121,10 @@ class GmailReader():
         modify_payload = {
             "removeLabelIds": ["UNREAD"]
         }
-        #
-        # self._logger.info("Marking email #%s as read" % mail_id)
-        # self._service.users().messages().modify(userId='me', id=mail_id,
-        #                                         body=modify_payload).execute()
+
+        self._logger.info("Marking email #%s as read" % mail_id)
+        self._service.users().messages().modify(userId='me', id=mail_id,
+                                                body=modify_payload).execute()
 
     def locate_sender(self, email):
         """
