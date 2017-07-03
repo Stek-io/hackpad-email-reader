@@ -7,6 +7,8 @@ import urllib.request
 
 from oauth2client import tools
 
+from gmail_reader import GmailReader
+
 __author__ = "Dimi Balaouras"
 __copyright__ = "Copyright 2017, Stek.io"
 __version__ = "0.0.1"
@@ -27,7 +29,7 @@ class HackpadMailProcessor():
     Process Hackpad Migration emails
     """
 
-    def __init__(self, config, logger):
+    def __init__(self, config, mail_reader, logger):
         """
         Constructor
         :param config: Configuration dict
@@ -35,7 +37,17 @@ class HackpadMailProcessor():
         """
 
         self._config = config
+        self._mail_reader = mail_reader
         self._logger = logger
+
+    def fetch_and_process_emails(self, ):
+        """
+        Fetch emails using the email reader and process them
+        :return:
+        """
+        new_mails = self._mail_reader.fetch_mails(q=self._config['gmail_query_string'])
+
+        self.process_emails(new_mails)
 
     def process_emails(self, emails):
         """
@@ -54,20 +66,34 @@ class HackpadMailProcessor():
             # Find url and attachment
             for mail_body in self.extract_email_bodies(email=email):
                 url = self.extract_url(text=str(mail_body, encoding='utf-8'))
+
+                # Check if we got a URL
                 if url:
                     # Download Archive
-                    attachment_path = self.download_archive(url=url)
-                    continue
+                    try:
+                        attachment_path = self.download_archive(url=url)
+                        break
+                    except urllib.error.HTTPError:
+                        self._logger.error("Failed downloading attachment from url %s" % url)
 
-            job = {
-                "from": sender,
-                "email_address": sender_email_address,
-                "sent_date": "",
-                "url": url,
-                "attachment": attachment_path
-            }
+            if attachment_path:
+                job = {
+                    "from": sender,
+                    "email_address": sender_email_address,
+                    "sent_date": "",
+                    "url": url,
+                    "attachment": attachment_path
+                }
 
-            self._logger.info("Queueing job: %s" % job)
+                # TODO Queue job
+                self._logger.info("Queueing job: %s" % job)
+            else:
+                self._logger.warning(
+                    "Could not find URL or attachment in received email (%s)" % email)
+
+            # TODO: Mark email as read
+            self._logger.info("Marking email as read: %s" % email)
+            self._mail_reader.mark_email_as_read(mail_id=email.get('mail_id', None))
 
     def extract_sender_email(self, sender):
         """
@@ -116,11 +142,11 @@ class HackpadMailProcessor():
         mail_bodies = []
 
         # See if there is a body
-        if email['body'] and 'data' in email['body']:
+        if 'body' in email and 'data' in email['body']:
             mail_bodies.append(base64.urlsafe_b64decode(email['body']['data']))
 
         # See if there are parts
-        if email['parts']:
+        if 'parts' in email:
             for part in email['parts']:
                 mail_bodies.append(base64.urlsafe_b64decode(part['body']['data']))
 
@@ -134,11 +160,16 @@ class HackpadMailProcessor():
         :return: the located URL as a string
         """
         archive_url = None
-        r = re.compile('(?<=href=").*hackpad-export.*?(?=")')
-        matches = r.findall(text)
+        regexes = [
+            re.compile('https:\/\/hackpad-export\.s3.*(?=")'),
+            re.compile('https:\/\/hackpad-export\.s3.*(?=>)')
+        ]
+        for r in regexes:
+            matches = r.findall(text)
 
-        if matches:
-            archive_url = html.unescape(matches[0])
-            self._logger.info("Located download URL: %s" % archive_url)
+            if matches:
+                archive_url = html.unescape(matches[0])
+                self._logger.info("Located download URL: %s" % archive_url)
+                break
 
         return archive_url

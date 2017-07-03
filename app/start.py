@@ -46,11 +46,10 @@ def start(config_file):
     config['client_secret_file'] = os.path.join(credentials_dir, config['client_secret_file'])
     config['credentials_file'] = os.path.join(credentials_dir, config['credentials_file'])
 
-    reader = GmailReader(config=config, logger=logger)
-    new_mails = reader.fetch_mails(q=config['gmail_query_string'])
+    mail_reader = GmailReader(config=config, logger=logger)
 
-    hackpad_processor = HackpadMailProcessor(config=config, logger=logger)
-    hackpad_processor.process_emails(emails=new_mails)
+    hackpad_processor = HackpadMailProcessor(config=config, mail_reader=mail_reader, logger=logger)
+    hackpad_processor.fetch_and_process_emails()
 
 
 if __name__ == '__main__':

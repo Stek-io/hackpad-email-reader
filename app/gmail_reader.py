@@ -107,6 +107,7 @@ class GmailReader():
         results = self._service.users().messages().get(userId='me', id=mail_id).execute()
         payload = results.get('payload', {})
         payload['from'] = self.locate_sender(payload)
+        payload['mail_id'] = mail_id
         return payload
 
     def mark_email_as_read(self, mail_id):
@@ -115,7 +116,15 @@ class GmailReader():
 
         :param mail_id: The Id of the email
         """
-        pass
+
+        # Removing label "Unread"
+        modify_payload = {
+            "removeLabelIds": ["UNREAD"]
+        }
+        #
+        # self._logger.info("Marking email #%s as read" % mail_id)
+        # self._service.users().messages().modify(userId='me', id=mail_id,
+        #                                         body=modify_payload).execute()
 
     def locate_sender(self, email):
         """

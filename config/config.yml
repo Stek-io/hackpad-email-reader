@@ -3,5 +3,6 @@ credentials_file: 'hackpad-gmail-reader.json'
 client_secret_file: 'client_secret.json'
 email_page_size: 10
 gmail_query_string: 'label:hackpad-import label:unread'
-scopes: 'https://www.googleapis.com/auth/gmail.readonly'
+scopes:
+  - 'https://www.googleapis.com/auth/gmail.modify'
 download_directory: ./attachments
