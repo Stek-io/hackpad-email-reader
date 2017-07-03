@@ -53,3 +53,16 @@ class RedisJobQueuer():
         self._logger.info(
             "Queueing job %s to queue  %s" % (job_str, self._config['redis']['queue_name']))
         self._redis_client.lpush(self._config['redis']['queue_name'], job_str)
+
+    def queue_error(self, error):
+        """
+
+        :param error:
+        :return:
+        """
+        job_str = json.dumps(error)
+
+        self._logger.warning(
+            "Queueing error %s to queue  %s" % (
+                job_str, self._config['redis']['error_queue_name']))
+        self._redis_client.lpush(self._config['redis']['error_queue_name'], job_str)

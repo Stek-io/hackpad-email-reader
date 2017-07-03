@@ -5,8 +5,8 @@
 - Python Virtual Env
 
 ## Setup Environment
-
 - Run `./bin/bootstrap.sh` to setup a Python Virtual Env inside the project root.
+- Add gmail OAUTH2 client secret inside `.credentials/client_secret.json`
 
 ## Run (once)
 - Edit (or copy and edit) the `./config/config.yml` file

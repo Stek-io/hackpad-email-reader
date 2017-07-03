@@ -75,6 +75,14 @@ class HackpadMailProcessor():
                     except urllib.error.HTTPError:
                         self._logger.error("Failed downloading attachment from url %s" % url)
 
+                        error = {
+                            "from": sender,
+                            "email_address": sender_email_address,
+                            "url": url
+                        }
+                        self._logger.info("Queueing error: %s" % error)
+                        self._job_queuer.queue_error(error)
+
             if attachment_path:
                 job = {
                     "from": sender,

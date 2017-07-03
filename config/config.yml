@@ -15,3 +15,4 @@ download_directory: ./attachments
 redis:
   url: redis://localhost:6379/9
   queue_name: hackpad_imports
+  error_queue_name: hackpad_import_errors

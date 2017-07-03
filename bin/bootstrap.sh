@@ -19,10 +19,10 @@ echo "$LOGO"
 echo "Bootstraping HACKPAD EMAIL PARSER Environment..."
 
 # Update pip
-pip install --upgrade pip
+pip3 install --upgrade pip
 
 # Install virtualenv
-pip install virtualenv
+pip3 install virtualenv
 
 # Go into the app root directory
 cd "$SCRIPTPATH/../"
