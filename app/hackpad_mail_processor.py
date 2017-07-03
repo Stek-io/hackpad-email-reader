@@ -169,8 +169,8 @@ class HackpadMailProcessor():
         """
         archive_url = None
         regexes = [
-            re.compile('https:\/\/hackpad-export\.s3.*(?=")'),
-            re.compile('https:\/\/hackpad-export\.s3.*(?=>)')
+            re.compile('https:\/\/[A-Za-z0-9\.-]*hackpad-export\.s3[^"]*(?=")'),
+            re.compile('https:\/\/[A-Za-z0-9\.-]*hackpad-export\.s3[^>]*(?=>)')
         ]
         for r in regexes:
             matches = r.findall(text)

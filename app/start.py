@@ -26,7 +26,7 @@ CREDENTIALS_FILE = os.path.join(CREDENTIALS_DIR, 'hackpad-gmail-reader.json')
 @click.command()
 @click.option('--config-file', required=False, default=__default_config_file__,
               help='Path to config file')
-def start(config_file):
+def fetch_email(config_file):
     """
     Start Backup Service
     """
@@ -57,4 +57,4 @@ def start(config_file):
 
 
 if __name__ == '__main__':
-    app = start(obj={})
+    app = fetch_email()
