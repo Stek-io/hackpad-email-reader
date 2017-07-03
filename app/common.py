@@ -8,7 +8,7 @@ __author__ = "Dimi Balaouras"
 __copyright__ = "Copyright 2017, Stek.io"
 __version__ = "0.0.1"
 __status__ = "Prototype"
-__description__ = "Azure Backups Common Python Lib"
+__description__ = "Hackpad Import Commons Lib"
 
 __abs_dirpath__ = os.path.dirname(os.path.abspath(__file__))
 

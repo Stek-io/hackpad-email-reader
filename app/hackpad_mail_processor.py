@@ -13,7 +13,7 @@ __author__ = "Dimi Balaouras"
 __copyright__ = "Copyright 2017, Stek.io"
 __version__ = "0.0.1"
 __status__ = "Prototype"
-__description__ = "Azure Manager"
+__description__ = "Hackpad Mail Processor"
 __abs_dirpath__ = os.path.dirname(os.path.abspath(__file__))
 
 try:
@@ -29,7 +29,7 @@ class HackpadMailProcessor():
     Process Hackpad Migration emails
     """
 
-    def __init__(self, config, mail_reader, logger):
+    def __init__(self, config, mail_reader, job_queuer, logger):
         """
         Constructor
         :param config: Configuration dict
@@ -39,6 +39,7 @@ class HackpadMailProcessor():
         self._config = config
         self._mail_reader = mail_reader
         self._logger = logger
+        self._job_queuer = job_queuer
 
     def fetch_and_process_emails(self, ):
         """
@@ -87,6 +88,7 @@ class HackpadMailProcessor():
 
                 # TODO Queue job
                 self._logger.info("Queueing job: %s" % job)
+                self._job_queuer.queue_job(job)
             else:
                 self._logger.warning(
                     "Could not find URL or attachment in received email (%s)" % email)

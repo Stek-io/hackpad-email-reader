@@ -5,12 +5,13 @@ import common
 import os
 from gmail_reader import GmailReader
 from hackpad_mail_processor import HackpadMailProcessor
+from job_queuer import RedisJobQueuer
 
 __author__ = "Dimi Balaouras"
 __copyright__ = "Copyright 2017, Stek.io"
 __version__ = "0.0.1"
 __status__ = "Prototype"
-__description__ = "Azure File Storage Backups"
+__description__ = "Hackpad Migration Email Importer"
 __abs_dirpath__ = os.path.dirname(os.path.abspath(__file__))
 __default_config_file__ = "%s/../config/config.yml" % __abs_dirpath__
 
@@ -46,9 +47,12 @@ def start(config_file):
     config['client_secret_file'] = os.path.join(credentials_dir, config['client_secret_file'])
     config['credentials_file'] = os.path.join(credentials_dir, config['credentials_file'])
 
+    # Instantiate services
     mail_reader = GmailReader(config=config, logger=logger)
+    job_queuer = RedisJobQueuer(config=config, logger=logger)
 
-    hackpad_processor = HackpadMailProcessor(config=config, mail_reader=mail_reader, logger=logger)
+    hackpad_processor = HackpadMailProcessor(config=config, mail_reader=mail_reader,
+                                             job_queuer=job_queuer, logger=logger)
     hackpad_processor.fetch_and_process_emails()
 
 

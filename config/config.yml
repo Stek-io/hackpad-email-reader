@@ -1,8 +1,17 @@
 application_name: 'Hackpad Gmail Reader'
+
+# Gmail
 credentials_file: 'hackpad-gmail-reader.json'
 client_secret_file: 'client_secret.json'
 email_page_size: 10
 gmail_query_string: 'label:hackpad-import label:unread'
-scopes:
+oauth2_scopes:
   - 'https://www.googleapis.com/auth/gmail.modify'
+
+# Download Directory
 download_directory: ./attachments
+
+# Where to queue Jobs
+redis:
+  url: redis://localhost:6379/9
+  queue_name: hackpad_imports

@@ -16,7 +16,7 @@ __author__ = "Dimi Balaouras"
 __copyright__ = "Copyright 2017, Stek.io"
 __version__ = "0.0.1"
 __status__ = "Prototype"
-__description__ = "Azure Manager"
+__description__ = "Gmail Reader"
 __abs_dirpath__ = os.path.dirname(os.path.abspath(__file__))
 
 try:
@@ -69,7 +69,7 @@ class GmailReader():
         credentials = store.get()
         if not credentials or credentials.invalid:
             flow = client.flow_from_clientsecrets(self._config['client_secret_file'],
-                                                  self._config['scopes'])
+                                                  self._config['oauth2_scopes'])
             flow.user_agent = self._config['application_name']
             if flags:
                 credentials = tools.run_flow(flow, store, flags)
