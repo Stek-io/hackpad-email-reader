@@ -3,6 +3,7 @@
 import os
 
 import click
+import time
 
 import common
 from gmail_reader import GmailReader
@@ -28,7 +29,9 @@ CREDENTIALS_FILE = os.path.join(CREDENTIALS_DIR, 'hackpad-gmail-reader.json')
 @click.command()
 @click.option('--config-file', required=False, default=__default_config_file__,
               help='Path to config file')
-def fetch_email(config_file):
+@click.option('--run-forever/--no-run-forever', default=False,
+              help='Run forever instead of just once')
+def fetch_email(config_file, run_forever):
     """
     Start Backup Service
     """
@@ -53,7 +56,11 @@ def fetch_email(config_file):
 
     hackpad_processor = HackpadMailProcessor(config=config, mail_reader=mail_reader,
                                              job_queuer=job_queuer, logger=logger)
-    hackpad_processor.fetch_and_process_emails()
+
+    if run_forever:
+        hackpad_processor.run_forever()
+    else:
+        hackpad_processor.fetch_and_process_emails()
 
 
 if __name__ == '__main__':

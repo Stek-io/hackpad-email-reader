@@ -27,6 +27,6 @@ source "$VENV_NAME/bin/activate"
 CONFIG_FILE=${1:-./config/config.yml}
 
 # Run script
-python3 ./app/start.py --config-file $CONFIG_FILE
+python3 ./app/start.py --config-file $CONFIG_FILE --run-forever
 
 deactivate

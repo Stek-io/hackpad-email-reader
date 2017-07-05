@@ -5,6 +5,7 @@ import re
 import urllib.parse
 import urllib.request
 
+import time
 from oauth2client import tools
 
 __author__ = "Dimi Balaouras"
@@ -31,6 +32,19 @@ class HackpadMailProcessor():
         self._mail_reader = mail_reader
         self._logger = logger
         self._job_queuer = job_queuer
+
+    def run_forever(self):
+        """
+
+        :return:
+        """
+        while True:
+            try:
+                self.fetch_and_process_emails()
+            except Exception:
+                self._logger.error("Something bad happened, but I stand strong!")
+            self._logger.debug("Taking a short nap...")
+            time.sleep(10)
 
     def fetch_and_process_emails(self, ):
         """
