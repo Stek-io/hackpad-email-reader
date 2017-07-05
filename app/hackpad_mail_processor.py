@@ -108,7 +108,7 @@ class HackpadMailProcessor():
                     "Could not find URL or attachment in received email (%s)" % email)
 
             # TODO: Mark email as read
-            self._logger.info("Marking email as read: %s" % email)
+            self._logger.info("Marking email as read: %s" % email.get('mail_id', None))
             self._mail_reader.mark_email_as_read(mail_id=email.get('mail_id', None))
 
     def extract_sender_email(self, sender):
