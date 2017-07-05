@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
-import click
-import common
 import os
+
+import click
+
+import common
 from gmail_reader import GmailReader
 from hackpad_mail_processor import HackpadMailProcessor
 from job_queuer import RedisJobQueuer
@@ -43,9 +45,7 @@ def fetch_email(config_file):
     credentials_dir = os.path.join(__abs_dirpath__, '../.credentials')
 
     # Enhance configuration
-    config['credentials_dir'] = os.path.join(credentials_dir, config['client_secret_file'])
-    config['client_secret_file'] = os.path.join(credentials_dir, config['client_secret_file'])
-    config['credentials_file'] = os.path.join(credentials_dir, config['credentials_file'])
+    config['credentials_dir'] = credentials_dir
 
     # Instantiate services
     mail_reader = GmailReader(config=config, logger=logger)

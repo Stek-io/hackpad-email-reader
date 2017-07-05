@@ -1,8 +1,9 @@
 application_name: 'Hackpad Gmail Reader'
 
 # Gmail
-credentials_file: 'hackpad-gmail-reader.json'
-client_secret_file: 'client_secret.json'
+credentials_dir_name: '.credentials'
+credentials_file_name: 'hackpad-gmail-reader.json'
+client_secret_file_name: 'client_secret.json'
 email_page_size: 10
 gmail_query_string: 'label:hackpad-import label:unread'
 oauth2_scopes:

@@ -19,13 +19,6 @@ __status__ = "Prototype"
 __description__ = "Gmail Reader"
 __abs_dirpath__ = os.path.dirname(os.path.abspath(__file__))
 
-try:
-    import argparse
-
-    flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
-except ImportError:
-    flags = None
-
 
 class GmailReader():
     """
@@ -41,7 +34,10 @@ class GmailReader():
 
         # Suppress cache warnings from gogogle api lib
         logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
-
+        self._client_secret_file = os.path.join(config['credentials_dir'],
+                                                config['client_secret_file_name'])
+        self._credentials_file = os.path.join(config['credentials_dir'],
+                                              config['credentials_file_name'])
         self._logger = logger
         self._config = config
         self._credentials = self._get_credentials()
@@ -60,22 +56,11 @@ class GmailReader():
             Credentials, the obtained credential.
         """
 
-        if not os.path.exists(self._config['credentials_dir']):
-            os.makedirs(self._config['credentials_dir'])
-
-        credential_path = self._config['credentials_file']
-
-        store = Storage(credential_path)
+        store = Storage(self._credentials_file)
         credentials = store.get()
         if not credentials or credentials.invalid:
-            flow = client.flow_from_clientsecrets(self._config['client_secret_file'],
-                                                  self._config['oauth2_scopes'])
-            flow.user_agent = self._config['application_name']
-            if flags:
-                credentials = tools.run_flow(flow, store, flags)
-            else:  # Needed only for compatibility with Python 2.6
-                credentials = tools.run(flow, store)
-            self._logger.info('Storing credentials to ' + credential_path)
+            raise Exception(
+                "Could not find Google Mail credentials at %s" % self._credentials_file)
         return credentials
 
     def fetch_mails(self, q='', max_results=10):

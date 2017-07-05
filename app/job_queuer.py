@@ -17,14 +17,6 @@ __status__ = "Prototype"
 __description__ = "Hackpad Import Job Queuer"
 __abs_dirpath__ = os.path.dirname(os.path.abspath(__file__))
 
-try:
-    import argparse
-
-    flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
-except ImportError:
-    flags = None
-
-
 class RedisJobQueuer():
     """
     Queues Jobs
